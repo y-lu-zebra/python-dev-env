@@ -28,10 +28,10 @@ jobs:
         run: flake8 --config ./setup.cfg
 
       - name: Run Black
-        run: black backend
+        run: black .
 
       - name: Run isort
-        run: isort backend
+        run: isort .
 
       - name: Run mypy
         run: mypy --config-file ./pyproject.toml .
