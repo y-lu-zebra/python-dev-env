@@ -1,0 +1,40 @@
+name: Develop
+
+on:
+  - push
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 2
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Flake8
+        run: flake8 --config ./setup.cfg
+
+      - name: Run Black
+        run: black backend
+
+      - name: Run isort
+        run: isort backend
+
+      - name: Run mypy
+        run: mypy --config-file ./pyproject.toml .
+
+      - name: Run docformatter
+        run: docformatter -r .
